@@ -193,6 +193,7 @@ def rankPolys():
     """
     trisdictionary = {}
     trisumdictionary = {}
+    usersdictionary = {}
     tristotal = 0
     print("\n=========================")
     print("Mesh Properties List")
@@ -226,6 +227,7 @@ def rankPolys():
         # Update dictionaries
         trisdictionary.update({meshname: tris})
         trisumdictionary.update({meshname: trisum})
+        usersdictionary.update({meshname: users})
 
     # Rank the dictionary's tri counts from smallest to largest
     # https://stackoverflow.com/questions/613183/how-do-i-sort-a-dictionary-by-value
@@ -235,7 +237,7 @@ def rankPolys():
     for mesh in trisumsorted:
         meshtris = trisorted[mesh]
         meshtrisum = trisumsorted[mesh]
-        meshusers = meshtrisum / meshtris
+        meshusers = usersdictionary[mesh]
         # Print results with commas (f"{num:,}")
         print("%s; %s; %d; %s:" % (mesh, f'{meshtris:,}', meshusers, f'{meshtrisum:,}'))
     print("Meshes have been ranked from smallest to largest polygon contribution.")
@@ -264,6 +266,7 @@ class StudioTools(bpy.types.Panel):
         layout.label(text="Data Gathering Tools:")
         layout.operator("studiotools.relabelparts", text="Label Part IDs")
         layout.operator("studiotools.printtriranks", text="Print Tris Ranked")
+        layout.operator("studiotools.openconsole", text="Toggle Console")
 
 class LegoColors(bpy.types.Operator):
     """Swap the objects in the scene to Lego Colors"""
@@ -345,6 +348,17 @@ class PrintTriRanks(bpy.types.Operator):
         rankPolys()
         return {'FINISHED'}
 
+class OpenConsole(bpy.types.Operator):
+    """View the System Console for data results and messages from scripts. Click again to close"""
+    bl_idname = "studiotools.openconsole"
+    bl_label = "Toggle Console"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        bpy.ops.wm.console_toggle()
+        return {'FINISHED'}
+
+
 def register():
     bpy.utils.register_class(StudioTools)
     bpy.utils.register_class(LegoColors)
@@ -355,6 +369,7 @@ def register():
     bpy.utils.register_class(SetAtOrigin)
     bpy.utils.register_class(LabelPartIDs)
     bpy.utils.register_class(PrintTriRanks)
+    bpy.utils.register_class(OpenConsole)
 
 def unregister():
     bpy.utils.unregister_class(StudioTools)
@@ -366,6 +381,7 @@ def unregister():
     bpy.utils.unregister_class(SetAtOrigin)
     bpy.utils.unregister_class(LabelPartIDs)
     bpy.utils.unregister_class(PrintTriRanks)
+    bpy.utils.unregister_class(OpenConsole)
 
 if __name__ == "__main__":
     register()

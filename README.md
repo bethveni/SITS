@@ -1,5 +1,4 @@
 ====================================================================================
-
 STUDIO IMPORT TOOLS (SITS) VERSION 1.0 BY BETHVENI WITH SUPPORT FROM KINGSIDORAK
 https://github.com/bethveni/SITS
 
@@ -17,11 +16,14 @@ https://ko-fi.com/bethveni
 Thank you for using this tool <3
 
 ====================================================================================
-
 Contributors:
 
 Script Programmer: BethVeni - https://bethveni.carrd.co/
 User Interface Editor: KingSidorak - https://linktr.ee/kingsidorak
-Tool Testers: ladyefri  
+Tool Testers: ladyefri, vootcaboot
+
+Special Thanks to DMGlaucon for inspiring the creation of this tool
+Check out his tutorial for tips on working with Stud.io models in Blender.
+https://www.youtube.com/watch?v=o0qw-3pcfjs&t=5s
 
 ====================================================================================

@@ -1,12 +1,12 @@
 bl_info = {
     "name": "Studio Import Tools",
-    "author": "BethVeni, with help from KingSidorak for the UI",
-    "version": (1, 0),
-    "blender": (2, 80, 0),
+    "author": "Created by BethVeni, with help from KingSidorak for the UI",
+    "version": (1, 1, 0),
+    "blender": (3, 5, 1),
     "location": "",
-    "description": "Tools for setting up and optimizing models imported from Bricklink Stud.io. View updates on github https://github.com/bethveni/SITS",
-    "warning": "",
-    "wiki_url": "",
+    "description": "Tools for setting up and optimizing models imported from Bricklink Stud.io.",
+    "warning": "CHECK GITHUB FOR UPDATES. Reccomend following the instructions, heeding warnings, and making a backup of your blender file before use.",
+    "wiki_url": "https://github.com/bethveni/SITS",
     "category": "!BV"
 }
 
@@ -102,6 +102,7 @@ def cleanMesh():
             bpy.ops.mesh.select_all(action='SELECT')
             bpy.ops.mesh.remove_doubles()
             bpy.ops.mesh.tris_convert_to_quads()
+            bpy.ops.mesh.customdata_custom_splitnormals_clear()
             bpy.ops.object.editmode_toggle()
             bpy.context.object.data.use_auto_smooth = True
             parts[i].select_set(False)
@@ -118,11 +119,9 @@ def delinkMesh():
     print("UNLINKING MESH DATA FOR COLLECTION")
     print("========================================")
     for i in range(0,numparts):
-        parts[i].select_set(True)
-        ob = bpy.context.object
-        ob.data = ob.data.copy()
-        parts[i].select_set(False)
-        print("Delinking", ob.name)
+        # Set the mesh data of the object equal to a copy of the mesh.
+        parts[i].data = parts[i].data.copy()
+        print("Delinking", parts[i].name)
 
 def setOrigin():
     parts = bpy.data.collections[0].objects
@@ -252,21 +251,25 @@ class StudioTools(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
-        layout.label(text="Studio Import Tools:")
+        layout.label(text="Studio Import Tools")
         layout.operator("wm.collada_import", text="Import Collada (.dae)")
         layout.operator("studiotools.legocolors", text="Lego Colors")
         layout.operator("studiotools.studiocolors", text="Studio Colors")
         layout.operator("studiotools.flipclean", text="Flip & Clean")
 
-        layout.label(text="Mesh Editing Tools: (CAUTION)")
+        layout.label(text="Mesh Editing Tools (CAUTION)")
         layout.operator("studiotools.cleanparts", text="Clean Parts")
         layout.operator("studiotools.unlinkparts", text="Unlink Parts")
         layout.operator("studiotools.setatorigin", text="Set At Origin")
 
-        layout.label(text="Data Gathering Tools:")
+        layout.label(text="Data Gathering Tools")
         layout.operator("studiotools.relabelparts", text="Label Part IDs")
         layout.operator("studiotools.printtriranks", text="Print Tris Ranked")
         layout.operator("studiotools.openconsole", text="Toggle Console")
+
+        layout.label(text="Support the Project!")
+        layout.operator("studiotools.githubpage", text="SITS Github")
+        layout.operator("studiotools.donationpage", text="Ko-Fi Donations")
 
 class LegoColors(bpy.types.Operator):
     """Swap the objects in the scene to Lego Colors"""
@@ -299,7 +302,7 @@ class FlipAndNodeDelete(bpy.types.Operator):
         return {'FINISHED'}
 
 class CleanParts(bpy.types.Operator):
-    """Optimize vertices, convert Tris to Quads, and apply auto-smooth"""
+    """Optimize vertices, convert Tris to Quads, apply auto-smooth, and remove custom split normal data"""
     bl_idname = "studiotools.cleanparts"
     bl_label = "Clean Parts"
     bl_options = {'REGISTER', 'UNDO'}
@@ -309,7 +312,7 @@ class CleanParts(bpy.types.Operator):
         return {'FINISHED'}
 
 class UnlinkParts(bpy.types.Operator):
-    """Unlink mesh data between parts of the same shape"""
+    """Unlink mesh data between parts of the same shape in the first collection"""
     bl_idname = "studiotools.unlinkparts"
     bl_label = "Unlink Parts"
     bl_options = {'REGISTER', 'UNDO'}
@@ -319,7 +322,7 @@ class UnlinkParts(bpy.types.Operator):
         return {'FINISHED'}
 
 class SetAtOrigin(bpy.types.Operator):
-    """Set the colleciton at the world origin using the selected object as a reference point"""
+    """Set the Collection at the world origin using the selected object as a reference point. Please use in OBJECT MODE and make sure you have the desired active object selected."""
     bl_idname = "studiotools.setatorigin"
     bl_label = "Set At Origin"
     bl_options = {'REGISTER', 'UNDO'}
@@ -358,6 +361,27 @@ class OpenConsole(bpy.types.Operator):
         bpy.ops.wm.console_toggle()
         return {'FINISHED'}
 
+class GithubPage(bpy.types.Operator):
+    """Check out the most up-to-date version of the SITS tool on Github"""
+    bl_idname = "studiotools.githubpage"
+    bl_label = "SITS Github"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        bpy.ops.wm.url_open(url = "https://github.com/bethveni/SITS")
+        return {'FINISHED'}
+
+class DonationPage(bpy.types.Operator):
+    """Support the ongoing development of this project by donating on Ko-Fi! Monthly donations add you to the Supporters list on Github"""
+    bl_idname = "studiotools.donationpage"
+    bl_label = "Fund SITS on Ko-Fi"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        bpy.ops.wm.url_open(url = "https://ko-fi.com/bethveni")
+        return {'FINISHED'}
+
+
 
 def register():
     bpy.utils.register_class(StudioTools)
@@ -370,6 +394,8 @@ def register():
     bpy.utils.register_class(LabelPartIDs)
     bpy.utils.register_class(PrintTriRanks)
     bpy.utils.register_class(OpenConsole)
+    bpy.utils.register_class(GithubPage)
+    bpy.utils.register_class(DonationPage)
 
 def unregister():
     bpy.utils.unregister_class(StudioTools)
@@ -382,6 +408,8 @@ def unregister():
     bpy.utils.unregister_class(LabelPartIDs)
     bpy.utils.unregister_class(PrintTriRanks)
     bpy.utils.unregister_class(OpenConsole)
+    bpy.utils.unregister_class(GithubPage)
+    bpy.utils.unregister_class(DonationPage)
 
 if __name__ == "__main__":
     register()

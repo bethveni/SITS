@@ -1,5 +1,5 @@
 ====================================================================================
-STUDIO IMPORT TOOLS (SITS) VERSION 1.0 BY BETHVENI WITH SUPPORT FROM KINGSIDORAK
+STUDIO IMPORT TOOLS (SITS) VERSION 1.1 BY BETHVENI WITH SUPPORT FROM KINGSIDORAK
 https://github.com/bethveni/SITS
 
 Plugin made for importing and optimizing digital LEGO designs imported from Bricklink Studio into Blender. 
@@ -25,5 +25,11 @@ Tool Testers: ladyefri, vootcaboot
 Special Thanks to DMGlaucon for inspiring the creation of this tool
 Check out his tutorial for tips on working with Stud.io models in Blender.
 https://www.youtube.com/watch?v=o0qw-3pcfjs&t=5s
+
+====================================================================================
+Future Updates:
+- Still ironing out issues with the Clean Parts script 
+- Focus being put on ensuring scripts are functional.
+- Additional tools under consideration after 8/10/2023 (BIONICLE day) 
 
 ====================================================================================
